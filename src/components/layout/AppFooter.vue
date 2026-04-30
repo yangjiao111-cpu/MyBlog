@@ -22,8 +22,8 @@ const socialLinks = [
         </a>
       </div>
       <p class="footer__text">
-        © 2026 星辰博客 · 用 ❤️ 和代码构建 · Powered by
-        <a href="#">星辰</a>
+        © 2026 星源博客 · 用 ❤️ 和代码构建 · Powered by
+        <a href="#">星源</a>
       </p>
     </div>
   </footer>

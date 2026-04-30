@@ -46,11 +46,11 @@ useScrollAnimation()
 
       <div class="about__grid anim">
         <div class="about__avatar-wrap">
-          <div class="about__avatar">👨‍💻</div>
+          <img class="about__avatar" src="@/assets/喵帕斯.jpg" alt="头像" />
         </div>
 
         <div class="about__info">
-          <h3 class="about__name">星辰</h3>
+          <h3 class="about__name">星源</h3>
           <div class="about__role">全栈开发者 / 设计爱好者</div>
           <p class="about__bio">
             热爱编程与设计，相信技术可以让世界变得更好。擅长前端开发，对
@@ -133,11 +133,7 @@ useScrollAnimation()
   width: 200px;
   height: 200px;
   border-radius: 24px;
-  background: linear-gradient(135deg, var(--accent), #f472b6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 5rem;
+  object-fit: cover;
   box-shadow: 0 8px 32px var(--accent-glow);
 }
 

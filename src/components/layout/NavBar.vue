@@ -13,7 +13,7 @@ function toggleMenu() {
     <div class="navbar__inner">
       <router-link to="/" class="navbar__logo">
         <span class="navbar__dot"></span>
-        星辰博客
+        星源博客
       </router-link>
 
       <ul class="navbar__links" :class="{ 'navbar__links--open': isMenuOpen }">

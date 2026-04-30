@@ -19,9 +19,11 @@ const scrollDown = () => {
 <style scoped>
 .scroll-hint {
   position: absolute;
+  left: 0;
+  right: 0;
   bottom: 32px;
-  left: 50%;
-  transform: translateX(-50%);
+  margin: 0 auto;
+  width: fit-content;
   display: flex;
   flex-direction: column;
   align-items: center;

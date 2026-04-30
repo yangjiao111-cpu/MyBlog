@@ -1,10 +1,23 @@
 <script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import { getHitokoto } from '@/apis'
 import ParticleBackground from './ParticleBackground.vue'
 import ScrollHint from '@/components/common/ScrollHint.vue'
 
 const emit = defineEmits<{
   startReading: []
 }>()
+
+const quoteText = ref('')
+
+onMounted(async () => {
+  try {
+    const res = await getHitokoto()
+    quoteText.value = res.text
+  } catch {
+    quoteText.value = '睡个好觉，我的朋友'
+  }
+})
 
 function handleStartReading() {
   emit('startReading')
@@ -21,8 +34,7 @@ function handleStartReading() {
         <span class="hero__title--highlight">创意与热爱</span>
       </h1>
       <p class="hero__desc">
-        一个热爱技术与设计的开发者，在这里分享前端开发、AI
-        探索与生活感悟。希望每一篇文章都能给你带来一点启发。
+        {{ quoteText }}
       </p>
       <a href="#articlesSection" class="hero__cta" @click="handleStartReading">
         开始阅读 →
