@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const socialLinks = [
-  { icon: '🐙', title: 'GitHub', href: '#' },
+  { icon: '@assets/github.png', title: 'GitHub', href: '#' },
   { icon: '🐦', title: 'Twitter', href: '#' },
   { icon: '✉️', title: 'Email', href: '#' },
   { icon: '📚', title: '掘金', href: '#' }

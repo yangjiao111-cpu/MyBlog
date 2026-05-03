@@ -17,23 +17,20 @@ defineEmits<{
     :style="{ transitionDelay: `${index * 0.08}s` }"
     @click="$emit('click', article.id)"
   >
-    <div class="article-card__cover-wrap">
-      <div
-        class="article-card__cover-placeholder"
-        :class="article.cover"
-      >
-        {{ article.emoji }}
-      </div>
-    </div>
-    <div class="article-card__body">
-      <div class="article-card__meta">
+    <div class="article-card__inner">
+      <div class="article-card__body" :class="{ 'article-card__body--full': !article.coverImg }">
         <span class="article-card__tag">{{ article.tag }}</span>
-        <span>{{ article.date }}</span>
-        <span>·</span>
-        <span>{{ article.readTime }}</span>
+        <h3 class="article-card__title">{{ article.title }}</h3>
+        <p class="article-card__excerpt">{{ article.excerpt }}</p>
+        <div class="article-card__footer">
+          <span class="article-card__date">{{ article.date }}</span>
+          <span class="article-card__dot">·</span>
+          <span>{{ article.readTime }}</span>
+        </div>
       </div>
-      <h3 class="article-card__title">{{ article.title }}</h3>
-      <p class="article-card__excerpt">{{ article.excerpt }}</p>
+      <div v-if="article.coverImg" class="article-card__thumb">
+        <img :src="article.coverImg" :alt="article.title" class="article-card__thumb-img" />
+      </div>
     </div>
   </article>
 </template>
@@ -42,65 +39,54 @@ defineEmits<{
 .article-card {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 16px;
-  overflow: hidden;
-  transition: all 0.3s ease;
+  border-radius: 12px;
   cursor: pointer;
 }
 
 .article-card:hover {
-  transform: translateY(-6px);
-  box-shadow: var(--card-shadow);
   border-color: var(--accent);
+  box-shadow: var(--card-shadow);
 }
 
-.article-card__cover-wrap {
-  overflow: hidden;
-  position: relative;
-}
-
-.article-card__cover-placeholder {
-  width: 100%;
-  height: 200px;
+.article-card__inner {
+  padding: 20px 24px;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 3rem;
-  transition: transform 0.4s ease;
-}
-
-.article-card:hover .article-card__cover-placeholder {
-  transform: scale(1.05);
+  align-items: stretch;
+  gap: 12px;
 }
 
 .article-card__body {
-  padding: 20px;
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
-.article-card__meta {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 0.8rem;
-  color: var(--text-dim);
-  margin-bottom: 10px;
+.article-card__body--full {
+  flex: 1;
+  width: 100%;
 }
 
 .article-card__tag {
-  padding: 3px 10px;
+  display: inline-block;
+  width: fit-content;
+  padding: 2px 10px;
   background: var(--tag-bg);
   color: var(--tag-text);
-  border-radius: 6px;
+  border-radius: 4px;
   font-size: 0.75rem;
   font-weight: 600;
+  line-height: 1.6;
+  letter-spacing: 0.5px;
 }
 
 .article-card__title {
-  font-size: 1.15rem;
+  font-size: 1.2rem;
   font-weight: 700;
-  margin-bottom: 8px;
-  line-height: 1.4;
-  transition: color 0.2s;
+  line-height: 1.5;
+  margin: 2px 0;
 }
 
 .article-card:hover .article-card__title {
@@ -112,8 +98,63 @@ defineEmits<{
   color: var(--text-secondary);
   line-height: 1.6;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  margin: 2px 0;
+}
+
+.article-card__footer {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex-wrap: wrap;
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  margin-top: 4px;
+}
+
+.article-card__dot {
+  margin: 0 4px;
+}
+
+.article-card__stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.article-card__thumb {
+  width: 260px;
+  height: 100%;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: 12px;
+  margin: auto 0;
+}
+
+.article-card__thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+@media (max-width: 640px) {
+  .article-card__inner {
+    flex-direction: column;
+  }
+
+  .article-card__thumb {
+    width: 100%;
+    height: 180px;
+    border-radius: 12px;
+    order: 1;
+  }
+
+  .article-card__body {
+    order: 0;
+  }
 }
 </style>

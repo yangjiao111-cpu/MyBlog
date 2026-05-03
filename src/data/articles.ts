@@ -1,4 +1,5 @@
 import type { Article } from '@/types'
+import coverPic from '@/assets/封面图测试.jpg'
 
 export const articles: Article[] = [
   {
@@ -77,6 +78,7 @@ document.body.appendChild(renderer.domElement);</code></pre>
     readTime: '10 分钟',
     cover: 'cover-3',
     emoji: '🤖',
+    coverImg: coverPic,
     excerpt:
       'AI 编程助手已经从简单的代码补全进化到能够理解项目上下文、生成完整功能模块的智能伙伴...',
     content: `

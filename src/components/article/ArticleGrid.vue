@@ -19,7 +19,7 @@ defineEmits<{
         <h2 class="articles-section__title">最新文章</h2>
         <p class="articles-section__desc">技术笔记、项目分享与思考沉淀</p>
       </div>
-      <div class="articles-section__grid">
+      <div class="articles-section__list">
         <ArticleCard
           v-for="(article, index) in articles"
           :key="article.id"
@@ -64,10 +64,12 @@ defineEmits<{
   font-size: 1rem;
 }
 
-.articles-section__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 24px;
+.articles-section__list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 860px;
+  margin: 0 auto;
 }
 
 @media (max-width: 768px) {
@@ -75,8 +77,8 @@ defineEmits<{
     padding: 64px 0;
   }
 
-  .articles-section__grid {
-    grid-template-columns: 1fr;
+  .articles-section__list {
+    gap: 12px;
   }
 }
 
