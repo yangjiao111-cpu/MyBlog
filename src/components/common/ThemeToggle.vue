@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { useTheme } from '@/composables'
 
-const { themeIcon, toggleTheme } = useTheme()
+const { themeIcon, toggleThemeWithTransition } = useTheme()
 </script>
 
 <template>
-  <button class="theme-toggle" :title="`切换主题`" @click="toggleTheme">
+  <button class="theme-toggle" :title="`切换主题`" @click="toggleThemeWithTransition">
     {{ themeIcon }}
   </button>
 </template>

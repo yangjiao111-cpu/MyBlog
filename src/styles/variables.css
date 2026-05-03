@@ -2,6 +2,39 @@
   --transition-speed: 0.3s;
 }
 
+/*
+ * 全局主题切换过渡（低版本浏览器降级兜底）
+ * 支持 View Transitions API 的浏览器会使用圆形展开动画，不受此影响
+ * 不支持的浏览器通过此规则实现平滑的颜色渐变过渡
+ */
+html {
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+*, *::before, *::after {
+  transition: background-color 0.4s ease,
+    border-color 0.4s ease,
+    box-shadow 0.4s ease;
+}
+
+/*
+ * View Transitions API 圆形展开过渡样式
+ * 禁用浏览器默认淡入淡出动画，new 层始终在上被圆形裁剪展开
+ */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 2147483646;
+}
+
 [data-theme="dark"] {
   --bg: #0f0f13;
   --bg-secondary: #1a1a24;
