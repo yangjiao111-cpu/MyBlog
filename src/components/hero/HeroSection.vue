@@ -52,7 +52,7 @@ function handleStartReading() {
         {{ quoteText || '\u00A0' }}
       </p>
       <a href="#articlesSection" class="hero__cta" @click="handleStartReading">
-        开始阅读 →
+        开始阅读
       </a>
     </div>
     <ScrollHint @click="handleStartReading" />

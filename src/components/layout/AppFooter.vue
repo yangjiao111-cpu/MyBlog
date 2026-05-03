@@ -1,15 +1,39 @@
 <script setup lang="ts">
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import githubIcon from '@/assets/github.svg'
+import githubWhiteIcon from '@/assets/github-white.svg'
 import bilibiliIcon from '@/assets/bilibili.svg'
 import csdnIcon from '@/assets/csdn.svg'
 import juejinIcon from '@/assets/juejin.svg'
 
-const socialLinks = [
-  { icon: githubIcon, title: 'GitHub', href: 'https://github.com/yangjiao111-cpu' },
+// 响应式主题状态（通过 MutationObserver 同步 data-theme 变化）
+const isDark = ref(document.documentElement.getAttribute('data-theme') === 'dark')
+
+let observer: MutationObserver | null = null
+
+onMounted(() => {
+  observer = new MutationObserver((mutations) => {
+    for (const m of mutations) {
+      if (m.type === 'attributes' && m.attributeName === 'data-theme') {
+        isDark.value = document.documentElement.getAttribute('data-theme') === 'dark'
+      }
+    }
+  })
+  observer.observe(document.documentElement, { attributes: true })
+})
+
+onUnmounted(() => {
+  observer?.disconnect()
+})
+
+const githubIconSrc = computed(() => isDark.value ? githubWhiteIcon : githubIcon)
+
+const socialLinks = computed(() => [
+  { icon: githubIconSrc.value, title: 'GitHub', href: 'https://github.com/yangjiao111-cpu' },
   { icon: bilibiliIcon, title: 'Bilibili', href: 'https://space.bilibili.com/1126818000?spm_id_from=333.1007.0.0' },
   { icon: csdnIcon, title: 'CSDN', href: 'https://blog.csdn.net/piaolianyangjiao?spm=1000.2115.3001.5343' },
   { icon: juejinIcon, title: '掘金', href: 'https://juejin.cn/user/4047715900077963' }
-]
+])
 </script>
 
 <template>
