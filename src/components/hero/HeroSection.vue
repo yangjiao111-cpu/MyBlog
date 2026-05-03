@@ -8,16 +8,29 @@ const emit = defineEmits<{
   startReading: []
 }>()
 
-const quoteText = ref('')
+const CACHE_KEY = 'cached-quote'
+const INIT_SENTENCE = '睡个好觉，我的朋友'
+const quoteText = ref(INIT_SENTENCE)
 
 onMounted(async () => {
+  //拿到存储在本地的语录
+  getQuote()
+  //刷新语录
+  await fetchQuote()
+})
+
+function getQuote() {
+  quoteText.value = localStorage.getItem(CACHE_KEY) ?? INIT_SENTENCE
+}
+
+async function fetchQuote() {
   try {
     const res = await getHitokoto()
-    quoteText.value = res.text
+    localStorage.setItem(CACHE_KEY, res.content)
   } catch {
-    quoteText.value = '睡个好觉，我的朋友'
+    quoteText.value ||= INIT_SENTENCE
   }
-})
+}
 
 function handleStartReading() {
   emit('startReading')
@@ -33,8 +46,10 @@ function handleStartReading() {
         用代码书写<br />
         <span class="hero__title--highlight">创意与热爱</span>
       </h1>
-      <p class="hero__desc">
-        {{ quoteText }}
+      <p
+        class="hero__desc"
+      >
+        {{ quoteText || '\u00A0' }}
       </p>
       <a href="#articlesSection" class="hero__cta" @click="handleStartReading">
         开始阅读 →
