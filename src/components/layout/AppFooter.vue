@@ -1,9 +1,14 @@
 <script setup lang="ts">
+import githubIcon from '@/assets/github.svg'
+import bilibiliIcon from '@/assets/bilibili.svg'
+import csdnIcon from '@/assets/csdn.svg'
+import juejinIcon from '@/assets/juejin.svg'
+
 const socialLinks = [
-  { icon: '@assets/github.png', title: 'GitHub', href: '#' },
-  { icon: '🐦', title: 'Twitter', href: '#' },
-  { icon: '✉️', title: 'Email', href: '#' },
-  { icon: '📚', title: '掘金', href: '#' }
+  { icon: githubIcon, title: 'GitHub', href: 'https://github.com/yangjiao111-cpu' },
+  { icon: bilibiliIcon, title: 'Bilibili', href: 'https://space.bilibili.com/1126818000?spm_id_from=333.1007.0.0' },
+  { icon: csdnIcon, title: 'CSDN', href: 'https://blog.csdn.net/piaolianyangjiao?spm=1000.2115.3001.5343' },
+  { icon: juejinIcon, title: '掘金', href: 'https://juejin.cn/user/4047715900077963' }
 ]
 </script>
 
@@ -15,10 +20,13 @@ const socialLinks = [
           v-for="link in socialLinks"
           :key="link.title"
           :href="link.href"
+          target="_blank"
+          rel="noopener noreferrer"
           class="footer__link"
           :title="link.title"
         >
-          {{ link.icon }}
+          <img v-if="link.icon.length > 5" :src="link.icon" :alt="link.title" class="footer__icon" />
+          <span v-else>{{ link.icon }}</span>
         </a>
       </div>
       <p class="footer__text">
@@ -52,8 +60,15 @@ const socialLinks = [
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.1rem;
   transition: all 0.2s;
+  overflow: hidden;
+}
+
+.footer__icon {
+  width: 20px;
+  height: 20px;
+  display: block;
+  image-rendering: auto;
 }
 
 .footer__link:hover {
