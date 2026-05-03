@@ -67,7 +67,6 @@ defineEmits<{
 .articles-section__list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
   max-width: 860px;
   margin: 0 auto;
 }
@@ -75,10 +74,6 @@ defineEmits<{
 @media (max-width: 768px) {
   .articles-section {
     padding: 64px 0;
-  }
-
-  .articles-section__list {
-    gap: 12px;
   }
 }
 
