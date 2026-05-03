@@ -113,7 +113,7 @@
 - `ThemeToggle.vue`：点击事件从 `toggleTheme` 改为 `toggleThemeWithTransition`
 
 ### Git 提交记录
-- **Commit**: （待提交）
+- **Commit**: `b3a3efe`
 - **Message**: `feat: 主题切换圆形展开动画（View Transitions API）`
 - **内容**: useTheme 新增 VT 圆形过渡，variables.css 新增伪元素样式，ThemeToggle 绑定新切换函数
 
