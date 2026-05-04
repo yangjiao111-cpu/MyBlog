@@ -1,22 +1,20 @@
 <!doctype html>
-<html lang="zh-CN" data-theme="dark">
+<html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
     <title>星源博客 - 记录思考与创造</title>
     <style>
-      /* 最先设置 html 背景色，在浏览器渲染第一帧前就生效，彻底杜绝白屏 */
+      /* 默认深色背景兜底，内联脚本会立即覆盖为正确主题色 */
       html { background-color: #0f0f13; }
     </style>
     <script>
-      /* 在 Vue 挂载前同步读取用户主题偏好，避免挂载后切换导致颜色跳变 */
-      (function() {
-        const theme = localStorage.getItem('theme') || 'dark'
-        document.documentElement.setAttribute('data-theme', theme)
-        if (theme === 'light') {
-          document.documentElement.style.backgroundColor = '#fafaf9'
-        }
+      /* 在浏览器渲染第一帧前同步设置主题，防止新标签页闪烁旧主题色 */
+      ;(function() {
+        var t = localStorage.getItem('theme') || 'dark'
+        document.documentElement.setAttribute('data-theme', t)
+        document.documentElement.style.backgroundColor = t === 'light' ? '#fafaf9' : '#0f0f13'
       })()
     </script>
     <style>

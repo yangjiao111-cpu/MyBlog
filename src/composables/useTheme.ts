@@ -1,4 +1,4 @@
-import { ref, watchEffect } from 'vue'
+import { ref, watchEffect, onUnmounted } from 'vue'
 
 export function useTheme() {
   const theme = ref<'dark' | 'light'>(
@@ -9,6 +9,28 @@ export function useTheme() {
 
   /** 标志位：View Transition 进行中时跳过 watchEffect 的自动 DOM 同步 */
   let isVTActive = false
+
+  /**
+   * 监听其他标签页的主题变化（storage 事件仅在非当前标签页修改时触发）
+   */
+  function onStorageChange(e: StorageEvent) {
+    if (e.key !== 'theme' || !e.newValue) return
+    const newTheme = e.newValue as 'dark' | 'light'
+    if (newTheme !== theme.value) {
+      isVTActive = true
+      document.documentElement.setAttribute('data-theme', newTheme)
+      document.documentElement.style.backgroundColor = newTheme === 'light' ? '#fafaf9' : '#0f0f13'
+      theme.value = newTheme
+      // 短暂延迟后解除 VT 锁，允许 watchEffect 正常工作
+      setTimeout(() => { isVTActive = false }, 500)
+    }
+  }
+  window.addEventListener('storage', onStorageChange)
+
+  // 组件卸载时清理监听（通常不需要，但保持良好实践）
+  onUnmounted(() => {
+    window.removeEventListener('storage', onStorageChange)
+  })
 
   function toggleTheme() {
     const nextTheme = theme.value === 'dark' ? 'light' : 'dark'
