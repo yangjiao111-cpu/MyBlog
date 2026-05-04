@@ -184,6 +184,16 @@
 
 ## 2026-05-05
 
+### Git 提交记录
+- **Commit**: `e3f61ce`
+- **Message**: `feat(navbar): 增加 transparent prop 控制背景透明度`
+- **内容**:
+  - NavBar 新增 `transparent` prop，默认 `false`
+  - `transparent=true` 时未滚动状态背景透明 + 白色文字（适配深色 Banner 大图）
+  - 滚动后统一加毛玻璃背景，保证可读性
+  - `App.vue` 通过 `useRoute` 判断当前路由，`/articles` 页面传入 `transparent`
+  - 修复主页浅色主题下导航栏文字看不清的问题
+
 ### 导航栏优化与交互修复
 
 - **NavBar.vue**：
