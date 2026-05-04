@@ -5,6 +5,13 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
     <title>星源博客 - 记录思考与创造</title>
+    <script>
+      /* 在 Vue 挂载前同步读取用户主题偏好，避免挂载后切换导致颜色跳变 */
+      (function() {
+        const theme = localStorage.getItem('theme') || 'dark'
+        document.documentElement.setAttribute('data-theme', theme)
+      })()
+    </script>
     <style>
       /* 初始加载动画 - 不依赖 JS，浏览器解析 HTML 立即显示 */
       #app:has(> .app-loading) {
@@ -22,6 +29,9 @@
         z-index: 99999;
         transition: opacity 0.4s ease, visibility 0.4s ease;
       }
+      html[data-theme="light"] .app-loading {
+        background: #fafaf9;
+      }
       .app-loading__dots {
         display: flex;
         align-items: center;
@@ -33,6 +43,9 @@
         border-radius: 50%;
         background: #f59e42;
         animation: appLoadingBounce 1.4s ease-in-out infinite both;
+      }
+      html[data-theme="light"] .app-loading__dot {
+        background: #e07a2f;
       }
       .app-loading__dot:nth-child(1) { animation-delay: -0.32s; }
       .app-loading__dot:nth-child(2) { animation-delay: -0.16s; }
