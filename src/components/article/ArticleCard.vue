@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Article } from '@/types'
 
-const props = defineProps<{
+defineProps<{
   article: Article
   index: number
 }>()
@@ -9,18 +9,13 @@ const props = defineProps<{
 defineEmits<{
   click: [articleId: number]
 }>()
-
-function handleClick() {
-  const url = `${window.location.origin}${window.location.pathname}?id=${props.article.id}`
-  window.open(url, '_blank', 'noopener,noreferrer')
-}
 </script>
 
 <template>
   <article
     class="article-item anim"
     :style="{ transitionDelay: `${index * 0.06}s` }"
-    @click="handleClick"
+    @click="$emit('click', article.id)"
   >
     <div class="article-item__inner">
       <div class="article-item__main">
