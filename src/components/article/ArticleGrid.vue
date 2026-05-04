@@ -1,14 +1,17 @@
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
 import type { Article } from '@/types'
 import ArticleCard from './ArticleCard.vue'
-import sidebarImg from '@/assets/珂朵莉.webp'
+import sidebarImg from '@/assets/珂朵莉.jpg'
 
 defineProps<{
   articles: Article[]
 }>()
 
+const router = useRouter()
+
 function goToList() {
-  window.open('/articles', '_blank', 'noopener,noreferrer')
+  router.push('/articles')
 }
 </script>
 
@@ -145,7 +148,6 @@ function goToList() {
   width: 100%;
   aspect-ratio: 3 / 4.2;
   overflow: hidden;
-  transform: translateX(-0.16rem);
   background: var(--bg-secondary);
 }
 

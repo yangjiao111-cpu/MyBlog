@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const isScrolled = ref(false)
 const isMenuOpen = ref(false)
 
@@ -14,16 +16,26 @@ function toggleMenu() {
 
 function openArticles() {
   isMenuOpen.value = false
-  window.open('/articles', '_blank', 'noopener,noreferrer')
+  router.push('/articles')
+}
+
+function handleClickOutside(event: MouseEvent) {
+  const target = event.target as HTMLElement
+  const nav = document.querySelector('.navbar__inner')
+  if (nav && !nav.contains(target)) {
+    isMenuOpen.value = false
+  }
 }
 
 onMounted(() => {
   onScroll()
   window.addEventListener('scroll', onScroll, { passive: true })
+  document.addEventListener('click', handleClickOutside)
 })
 
 onUnmounted(() => {
   window.removeEventListener('scroll', onScroll)
+  document.removeEventListener('click', handleClickOutside)
 })
 </script>
 
@@ -45,14 +57,11 @@ onUnmounted(() => {
           <a href="javascript:void(0)" @click="openArticles">文章</a>
         </li>
         <li>
-          <a href="#about" @click="isMenuOpen = false">关于</a>
-        </li>
-        <li>
           <slot name="theme-toggle" />
         </li>
       </ul>
 
-      <button class="navbar__hamburger" @click="toggleMenu">
+      <button class="navbar__hamburger" @click.stop="toggleMenu">
         <span></span>
         <span></span>
         <span></span>
@@ -109,6 +118,11 @@ onUnmounted(() => {
   color: inherit;
 }
 
+.navbar:not(.navbar--scrolled) .navbar__logo {
+  color: #fff;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+
 .navbar--scrolled .navbar__logo {
   opacity: 1;
 }
@@ -116,6 +130,11 @@ onUnmounted(() => {
 .navbar__star {
   display: block;
   color: var(--accent);
+}
+
+.navbar:not(.navbar--scrolled) .navbar__star {
+  color: #fff;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4));
 }
 
 .navbar--scrolled .navbar__home-icon {
@@ -135,6 +154,15 @@ onUnmounted(() => {
   transition: color 0.2s;
   position: relative;
   text-decoration: none;
+}
+
+.navbar:not(.navbar--scrolled) .navbar__links a {
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+.navbar:not(.navbar--scrolled) .navbar__links a:hover {
+  color: #fff;
 }
 
 .navbar__links a::after {
@@ -176,6 +204,11 @@ onUnmounted(() => {
   transition: all 0.3s;
 }
 
+.navbar:not(.navbar--scrolled) .navbar__hamburger span {
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
 @media (max-width: 768px) {
   .navbar__hamburger {
     display: flex;
@@ -197,6 +230,11 @@ onUnmounted(() => {
     padding: 16px 24px;
     gap: 16px;
     border-bottom: 1px solid var(--border);
+  }
+
+  .navbar__links--open a {
+    color: var(--text-secondary) !important;
+    text-shadow: none !important;
   }
 
   .navbar--scrolled .navbar__links--open {

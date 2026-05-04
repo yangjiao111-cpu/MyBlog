@@ -181,3 +181,28 @@
 - **Commit**: `ef5d990`
 - **Message**: `feat: 文章列表页Banner+波浪动画+响应式宽屏图片`
 - **文件变更**: 7 个文件变更，175 行新增，8 行删除
+
+## 2026-05-05
+
+### 导航栏优化与交互修复
+
+- **NavBar.vue**：
+  - **Banner 区域文字可读性优化**：未滚动状态下导航栏文字/Logo/汉堡菜单改为白色并添加 `text-shadow`，确保在任意 Banner 大图背景上清晰可读；滚动后恢复正常主题色
+  - **移除"关于"入口**：导航栏和移动端弹窗中均删除"关于"链接
+  - **点击弹窗外自动关闭**：添加 `document` 全局点击监听，点击导航栏外部区域时自动关闭移动端菜单弹窗
+  - **文章跳转改为本标签页**：`window.open` → `router.push('/articles')`
+
+### 文章跳转方式统一
+
+- **ArticleCard.vue**：文章点击从 `window.open('_blank')` 改为 `router.push`，在本标签页内打开详情
+- **ArticleGrid.vue**："查看全部文章"从 `window.open` 改为 `router.push`
+- **ArticlesView.vue**：文章列表点击从 `window.open` 改为 `router.push`
+
+### 深色模式波浪颜色层次优化
+
+- **ArticlesView.vue**：深色模式下波浪不再是纯黑一片，4 层波浪分别使用不同颜色制造层次感
+  - 第 1 层（最上层）：`var(--surface-hover)` `#2a2a38`
+  - 第 2 层：`var(--surface)` `#22222e`
+  - 第 3 层：`var(--bg-secondary)` `#1a1a24`
+  - 第 4 层（最底层）：保持 `var(--bg)`，确保与页面背景无缝衔接
+  - 浅色模式下波浪颜色不变（全部 `var(--bg)`）

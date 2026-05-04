@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, nextTick } from 'vue'
+import { useRouter } from 'vue-router'
 import type { Article } from '@/types'
 import { articles } from '@/data/articles'
 import { useScrollAnimation } from '@/composables'
@@ -9,6 +10,8 @@ import darkBannerImg from '@/assets/七海千秋.jpg'
 import darkBannerWideImg from '@/assets/七海千秋宽屏.png'
 
 useScrollAnimation()
+
+const router = useRouter()
 
 // 主题检测（响应式）
 const currentTheme = ref<'dark' | 'light'>(
@@ -49,8 +52,7 @@ function loadMore() {
 }
 
 function handleArticleClick(id: number) {
-  const url = `${window.location.origin}/article/${id}`
-  window.open(url, '_blank', 'noopener,noreferrer')
+  router.push(`/article/${id}`)
 }
 
 function onScroll() {
@@ -84,9 +86,6 @@ onUnmounted(() => {
         <source
           media="(min-width: 1024px)"
           :srcset="currentTheme === 'dark' ? darkBannerWideImg : lightBannerWideImg"
-          :class="`{
-            'positionQiHai':${currentTheme === 'dark'}
-          }`"
         />
         <!-- 默认（普通版） -->
         <img
@@ -241,6 +240,21 @@ onUnmounted(() => {
   animation-duration: 20s;
   opacity: 1;
 }
+
+/* 深色模式下波浪颜色层次优化：从浅到深，增加质感 */
+.theme-dark .wave-parallax > use:nth-child(1) {
+  fill: var(--surface-hover);
+}
+
+.theme-dark .wave-parallax > use:nth-child(2) {
+  fill: var(--surface);
+}
+
+.theme-dark .wave-parallax > use:nth-child(3) {
+  fill: var(--bg-secondary);
+}
+
+/* 第 4 层保持 var(--bg)，确保与页面背景无缝衔接 */
 
 @keyframes move-forever {
   0% {
@@ -398,10 +412,6 @@ onUnmounted(() => {
 
 .articles-page__loading-dot:nth-child(3) {
   animation-delay: 0.4s;
-}
-
-.positionQiHai{
-  object-position:center center;
 }
 
 @keyframes loadingPulse {
