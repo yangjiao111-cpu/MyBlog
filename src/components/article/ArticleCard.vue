@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
 import type { Article } from '@/types'
 
 const props = defineProps<{
@@ -7,10 +6,8 @@ const props = defineProps<{
   index: number
 }>()
 
-const router = useRouter()
-
 function handleClick() {
-  router.push(`/article/${props.article.id}`)
+  window.open(`/article/${props.article.id}`, '_blank')
 }
 </script>
 

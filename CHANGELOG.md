@@ -208,6 +208,23 @@
 - **ArticleGrid.vue**："查看全部文章"从 `window.open` 改为 `router.push`
 - **ArticlesView.vue**：文章列表点击从 `window.open` 改为 `router.push`
 
+### 文章跳转改为新标签页打开
+
+- 所有文章相关跳转从 `router.push` 恢复为 `window.open('_blank')`
+- **NavBar.vue**：导航栏"文章"入口
+- **ArticleGrid.vue**：首页"查看全部文章"
+- **ArticleCard.vue**：首页文章卡片点击
+- **ArticlesView.vue**：文章列表页文章点击
+
+### SPA 白屏加载动画
+
+- **问题**：新标签页打开 SPA 时，空 `div#app` 导致白屏闪烁，JS 加载执行后才渲染内容
+- **方案**：`index.html` 的 `#app` 内添加纯 CSS/HTML 全屏 loading 动画
+  - 不依赖 JS，浏览器解析 HTML 瞬间即显示
+  - 3 个跳动圆点（品牌色 `#f59e42`）+ 深色背景 `#0f0f13`
+  - Vue 挂载后自动替换为真实内容，loading 消失
+  - 彻底消除白屏 → 内容的跳变感
+
 ### 深色模式波浪颜色层次优化
 
 - **ArticlesView.vue**：深色模式下波浪不再是纯黑一片，4 层波浪分别使用不同颜色制造层次感

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, nextTick } from 'vue'
-import { useRouter } from 'vue-router'
 import type { Article } from '@/types'
 import { articles } from '@/data/articles'
 import { useScrollAnimation } from '@/composables'
@@ -10,8 +9,6 @@ import darkBannerImg from '@/assets/七海千秋.jpg'
 import darkBannerWideImg from '@/assets/七海千秋宽屏.png'
 
 useScrollAnimation()
-
-const router = useRouter()
 
 // 主题检测（响应式）
 const currentTheme = ref<'dark' | 'light'>(
@@ -31,6 +28,7 @@ const loadedCount = ref(0)
 const displayedArticles = ref<Article[]>([])
 const hasMore = ref(true)
 const isLoading = ref(false)
+const isPageReady = ref(false)
 
 function loadMore() {
   if (isLoading.value || !hasMore.value) return
@@ -52,7 +50,7 @@ function loadMore() {
 }
 
 function handleArticleClick(id: number) {
-  router.push(`/article/${id}`)
+  window.open(`/article/${id}`, '_blank')
 }
 
 function onScroll() {
@@ -69,6 +67,30 @@ onMounted(() => {
   window.addEventListener('scroll', onScroll, { passive: true })
   // 启动主题监听
   themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
+
+  // 等待 Banner 图片加载完成，设置最小加载时间避免闪烁
+  const bannerImg = document.querySelector('.articles-page__banner-img') as HTMLImageElement
+  const minLoadTime = 400
+  const startTime = Date.now()
+
+  const markReady = () => {
+    const elapsed = Date.now() - startTime
+    const remaining = Math.max(0, minLoadTime - elapsed)
+    setTimeout(() => {
+      isPageReady.value = true
+    }, remaining)
+  }
+
+  if (bannerImg) {
+    if (bannerImg.complete) {
+      markReady()
+    } else {
+      bannerImg.addEventListener('load', markReady, { once: true })
+      bannerImg.addEventListener('error', markReady, { once: true })
+    }
+  } else {
+    markReady()
+  }
 })
 
 onUnmounted(() => {
@@ -79,8 +101,19 @@ onUnmounted(() => {
 
 <template>
   <main class="articles-page" :class="{ 'theme-dark': currentTheme === 'dark' }">
+    <!-- 页面加载动画 -->
+    <Transition name="fade">
+      <div v-if="!isPageReady" class="articles-page__loader">
+        <div class="articles-page__loader-inner">
+          <div class="articles-page__loader-dot"></div>
+          <div class="articles-page__loader-dot"></div>
+          <div class="articles-page__loader-dot"></div>
+        </div>
+      </div>
+    </Transition>
+
     <!-- 顶部大图 Banner -->
-    <section class="articles-page__banner">
+    <section v-show="isPageReady" class="articles-page__banner">
       <picture>
         <!-- 宽屏版：屏幕宽度 ≥1024px 时加载 -->
         <source
@@ -121,7 +154,7 @@ onUnmounted(() => {
     </section>
 
     <!-- 文章列表区域 -->
-    <div class="articles-page__container">
+    <div v-show="isPageReady" class="articles-page__container">
       <div class="articles-page__header anim">
         <div class="articles-page__tag">Blog</div>
         <h1 class="articles-page__title">文章列表</h1>
@@ -271,6 +304,64 @@ onUnmounted(() => {
     height: 40px;
     min-height: 40px;
   }
+}
+
+/* ====== 页面加载动画 ====== */
+.articles-page__loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+}
+
+.articles-page__loader-inner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.articles-page__loader-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: loaderBounce 1.4s ease-in-out infinite both;
+}
+
+.articles-page__loader-dot:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.articles-page__loader-dot:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+@keyframes loaderBounce {
+  0%, 80%, 100% {
+    transform: scale(0.6);
+    opacity: 0.4;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* 加载动画淡入淡出 */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.4s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 
 /* ====== 页面主体 ====== */

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
-import { useRouter } from 'vue-router'
 
 interface Props {
   transparent?: boolean
@@ -10,7 +9,6 @@ const props = withDefaults(defineProps<Props>(), {
   transparent: false,
 })
 
-const router = useRouter()
 const isScrolled = ref(false)
 const isMenuOpen = ref(false)
 
@@ -24,7 +22,7 @@ function toggleMenu() {
 
 function openArticles() {
   isMenuOpen.value = false
-  router.push('/articles')
+  window.open('/articles', '_blank')
 }
 
 function handleClickOutside(event: MouseEvent) {

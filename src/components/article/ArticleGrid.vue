@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
 import type { Article } from '@/types'
 import ArticleCard from './ArticleCard.vue'
 import sidebarImg from '@/assets/珂朵莉.jpg'
@@ -8,10 +7,8 @@ defineProps<{
   articles: Article[]
 }>()
 
-const router = useRouter()
-
 function goToList() {
-  router.push('/articles')
+  window.open('/articles', '_blank')
 }
 </script>
 
