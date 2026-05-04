@@ -165,3 +165,19 @@
 - **Commit**: `255328b`
 - **Message**: `feat: 最新文章模块布局改造（左文右图分栏）`
 - **文件变更**: 11 个文件变更，140 行新增，75 行删除
+
+### 文章列表页 Banner + 波浪动画 + 响应式宽屏图片
+
+- **ArticlesView.vue**：全面改造文章列表页视觉体验
+  - **顶部全宽 Banner 大图**：浅色主题=宫园薰.jpg，深色主题=七海千秋.jpg
+  - **多层视差波浪动画**：Butterfly/Firefly 经典方案，4 层 SVG `<use>` 不同速度/透明度
+  - **主题自动响应**：MutationObserver 监听 `data-theme` 变化，Banner 图实时切换
+  - **宽屏响应式图片**：`<picture>` + `media="(min-width: 1024px)"` 断点，宽屏自动加载 宫园薰宽屏.jpg / 七海千秋宽屏.png
+  - **深色主题宽屏 y 轴居中**：`object-position: center center` 单独覆盖，浅色保持顶部对齐
+- **资源更新**：宫园薰.jpg（1.5MB 高清）、七海千秋.jpg、七海千秋宽屏.png（4.5MB）、宫园薰宽屏.jpg（6.8MB）
+- **删除旧资源**：宫园薰.avif、七海千秋.webp
+
+### Git 提交记录
+- **Commit**: `ef5d990`
+- **Message**: `feat: 文章列表页Banner+波浪动画+响应式宽屏图片`
+- **文件变更**: 7 个文件变更，175 行新增，8 行删除
