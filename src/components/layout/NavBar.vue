@@ -12,6 +12,11 @@ function toggleMenu() {
   isMenuOpen.value = !isMenuOpen.value
 }
 
+function openArticles() {
+  isMenuOpen.value = false
+  window.open('/articles', '_blank', 'noopener,noreferrer')
+}
+
 onMounted(() => {
   onScroll()
   window.addEventListener('scroll', onScroll, { passive: true })
@@ -37,7 +42,7 @@ onUnmounted(() => {
 
       <ul class="navbar__links" :class="{ 'navbar__links--open': isMenuOpen }">
         <li>
-          <router-link to="/" @click="isMenuOpen = false">文章</router-link>
+          <a href="javascript:void(0)" @click="openArticles">文章</a>
         </li>
         <li>
           <a href="#about" @click="isMenuOpen = false">关于</a>

@@ -118,3 +118,8 @@
 - **内容**: useTheme 新增 VT 圆形过渡，variables.css 新增伪元素样式，ThemeToggle 绑定新切换函数
 
 ## 2026-05-04
+
+### Git 提交记录
+- **Commit**: `0613102`
+- **Message**: `feat: 文章链接改为新标签页打开`
+- **内容**: NavBar 文章链接改为 `target=_blank` 新标签页打开首页；ArticleCard 点击文章在新标签页打开详情页（`?id=xxx`）

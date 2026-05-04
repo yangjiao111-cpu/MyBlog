@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
+import ArticlesView from '@/views/ArticlesView.vue'
+import ArticleDetailView from '@/views/ArticleDetailView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -10,9 +12,14 @@ const router = createRouter({
       component: HomeView
     },
     {
+      path: '/articles',
+      name: 'articles',
+      component: ArticlesView
+    },
+    {
       path: '/article/:id',
       name: 'article',
-      component: HomeView
+      component: ArticleDetailView
     }
   ],
   scrollBehavior(_to, _from, savedPosition) {

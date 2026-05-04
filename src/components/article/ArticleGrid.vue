@@ -5,10 +5,6 @@ import ArticleCard from './ArticleCard.vue'
 defineProps<{
   articles: Article[]
 }>()
-
-defineEmits<{
-  select: [articleId: number]
-}>()
 </script>
 
 <template>
@@ -25,7 +21,6 @@ defineEmits<{
           :key="article.id"
           :article="article"
           :index="index"
-          @click="(id) => $emit('select', id)"
         />
       </div>
     </div>
