@@ -37,7 +37,7 @@ onUnmounted(() => {
 
       <ul class="navbar__links" :class="{ 'navbar__links--open': isMenuOpen }">
         <li>
-          <router-link to="/" @click="isMenuOpen = false">文章</router-link>
+          <a href="/" target="_blank" rel="noopener noreferrer" @click="isMenuOpen = false">文章</a>
         </li>
         <li>
           <a href="#about" @click="isMenuOpen = false">关于</a>
