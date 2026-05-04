@@ -3,8 +3,25 @@ import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 import type { Article } from '@/types'
 import { articles } from '@/data/articles'
 import { useScrollAnimation } from '@/composables'
+import lightBannerImg from '@/assets/宫园薰.jpg'
+import lightBannerWideImg from '@/assets/宫园薰宽屏.jpg'
+import darkBannerImg from '@/assets/七海千秋.jpg'
+import darkBannerWideImg from '@/assets/七海千秋宽屏.png'
 
 useScrollAnimation()
+
+// 主题检测（响应式）
+const currentTheme = ref<'dark' | 'light'>(
+  (document.documentElement.getAttribute('data-theme') as 'dark' | 'light') || 'dark'
+)
+
+// 监听 DOM 属性变化以响应主题切换
+const themeObserver = new MutationObserver(() => {
+  const theme = document.documentElement.getAttribute('data-theme') as 'dark' | 'light'
+  if (theme && theme !== currentTheme.value) {
+    currentTheme.value = theme
+  }
+})
 
 const PAGE_SIZE = 10
 const loadedCount = ref(0)
@@ -16,7 +33,6 @@ function loadMore() {
   if (isLoading.value || !hasMore.value) return
   isLoading.value = true
 
-  // 模拟加载延迟
   setTimeout(() => {
     const next = articles.slice(loadedCount.value, loadedCount.value + PAGE_SIZE)
     displayedArticles.value.push(...next)
@@ -24,7 +40,6 @@ function loadMore() {
     hasMore.value = loadedCount.value < articles.length
     isLoading.value = false
 
-    // 等待 DOM 更新后，给新渲染的 .anim 元素添加 visible 类
     nextTick(() => {
       document.querySelectorAll('.articles-page__list .anim').forEach((el) => {
         el.classList.add('visible')
@@ -42,7 +57,6 @@ function onScroll() {
   const scrollTop = window.scrollY || document.documentElement.scrollTop
   const scrollHeight = document.documentElement.scrollHeight
   const clientHeight = document.documentElement.clientHeight
-  // 距离底部 200px 时触发加载
   if (scrollTop + clientHeight >= scrollHeight - 200) {
     loadMore()
   }
@@ -51,15 +65,63 @@ function onScroll() {
 onMounted(() => {
   loadMore()
   window.addEventListener('scroll', onScroll, { passive: true })
+  // 启动主题监听
+  themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
 })
 
 onUnmounted(() => {
   window.removeEventListener('scroll', onScroll)
+  themeObserver.disconnect()
 })
 </script>
 
 <template>
-  <main class="articles-page">
+  <main class="articles-page" :class="{ 'theme-dark': currentTheme === 'dark' }">
+    <!-- 顶部大图 Banner -->
+    <section class="articles-page__banner">
+      <picture>
+        <!-- 宽屏版：屏幕宽度 ≥1024px 时加载 -->
+        <source
+          media="(min-width: 1024px)"
+          :srcset="currentTheme === 'dark' ? darkBannerWideImg : lightBannerWideImg"
+          :class="`{
+            'positionQiHai':${currentTheme === 'dark'}
+          }`"
+        />
+        <!-- 默认（普通版） -->
+        <img
+          :src="currentTheme === 'dark' ? darkBannerImg : lightBannerImg"
+          alt="banner"
+          class="articles-page__banner-img"
+          loading="eager"
+        />
+      </picture>
+      <!-- 波浪分隔线（Butterfly/Firefly 经典多层视差） -->
+      <div class="articles-page__wave">
+        <svg
+          class="wave-svg"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 24 150 28"
+          preserveAspectRatio="none"
+          shape-rendering="auto"
+        >
+          <defs>
+            <path
+              id="gentle-wave"
+              d="M -160 44 c 30 0 58 -18 88 -18 s 58 18 88 18 s 58 -18 88 -18 s 58 18 88 18 v 44 h -352 Z"
+            />
+          </defs>
+          <g class="wave-parallax">
+            <use href="#gentle-wave" x="48" y="0" />
+            <use href="#gentle-wave" x="48" y="3" />
+            <use href="#gentle-wave" x="48" y="5" />
+            <use href="#gentle-wave" x="48" y="7" />
+          </g>
+        </svg>
+      </div>
+    </section>
+
+    <!-- 文章列表区域 -->
     <div class="articles-page__container">
       <div class="articles-page__header anim">
         <div class="articles-page__tag">Blog</div>
@@ -104,15 +166,109 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
+/* ====== 顶部 Banner 大图 ====== */
+.articles-page__banner {
+  position: relative;
+  width: 100%;
+  /* 用 aspect-ratio 保持图片比例，避免固定高度导致拉伸模糊 */
+  aspect-ratio: 21 / 9;
+  min-height: 320px;
+  max-height: 520px;
+  overflow: hidden;
+}
+
+.articles-page__banner-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* 顶部对齐：人物脸部在图片上方，确保宽屏裁切时从底部裁，脸部始终可见 */
+  object-position: top center;
+}
+
+/* 深色主题宽屏：七海千秋宽屏图片 y 轴居中 */
+@media (min-width: 1024px) {
+  .theme-dark .articles-page__banner-img {
+    object-position: center center;
+  }
+}
+
+/* ====== 波浪动画（Butterfly/Firefly 经典多层视差） ====== */
+.articles-page__wave {
+  width: 100%;
+  position: absolute;
+  left: 0;
+  bottom: -11px;
+  z-index: 5;
+  line-height: 0;
+}
+
+.wave-svg {
+  width: 100%;
+  height: 5rem;
+  display: block;
+}
+
+/* 所有波浪层共用动画 */
+.wave-parallax > use {
+  animation: move-forever 25s cubic-bezier(0.55, 0.5, 0.45, 0.5) infinite;
+  fill: var(--bg);
+}
+
+/* 第 1 层（最顶层，y=0，最快，半透明） */
+.wave-parallax > use:nth-child(1) {
+  animation-delay: -2s;
+  animation-duration: 7s;
+  opacity: 0.75;
+}
+
+/* 第 2 层（y=3） */
+.wave-parallax > use:nth-child(2) {
+  animation-delay: -3s;
+  animation-duration: 10s;
+  opacity: 0.5;
+}
+
+/* 第 3 层（y=5） */
+.wave-parallax > use:nth-child(3) {
+  animation-delay: -4s;
+  animation-duration: 13s;
+  opacity: 0.22;
+}
+
+/* 第 4 层（最底层，y=7，最慢，完全不透明=背景色） */
+.wave-parallax > use:nth-child(4) {
+  animation-delay: -5s;
+  animation-duration: 20s;
+  opacity: 1;
+}
+
+@keyframes move-forever {
+  0% {
+    transform: translate3d(-90px, 0, 0);
+  }
+  100% {
+    transform: translate3d(85px, 0, 0);
+  }
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+  .wave-svg {
+    height: 40px;
+    min-height: 40px;
+  }
+}
+
+/* ====== 页面主体 ====== */
 .articles-page {
   min-height: 100vh;
   background: var(--bg);
-  padding: 100px 24px;
 }
 
 .articles-page__container {
   max-width: 860px;
   margin: 0 auto;
+  padding: 60px 24px 100px;
 }
 
 .articles-page__header {
@@ -143,7 +299,7 @@ onUnmounted(() => {
   font-size: 1rem;
 }
 
-/* 文章列表项（与首页 ArticleCard 保持一致） */
+/* 文章列表项 */
 .article-item {
   padding: 20px 0;
   border-bottom: 1px solid var(--border);
@@ -244,6 +400,10 @@ onUnmounted(() => {
   animation-delay: 0.4s;
 }
 
+.positionQiHai{
+  object-position:center center;
+}
+
 @keyframes loadingPulse {
   0%, 100% { opacity: 0.4; transform: scale(0.8); }
   50% { opacity: 1; transform: scale(1.2); }
@@ -257,9 +417,16 @@ onUnmounted(() => {
   padding: 40px 0 20px;
 }
 
+/* ====== 响应式 ====== */
 @media (max-width: 768px) {
-  .articles-page {
-    padding: 80px 20px;
+  .articles-page__banner {
+    aspect-ratio: 16 / 9;
+    min-height: 200px;
+    max-height: 360px;
+  }
+
+  .articles-page__container {
+    padding: 48px 20px 80px;
   }
 }
 
