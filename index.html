@@ -5,32 +5,35 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
     <title>星源博客 - 记录思考与创造</title>
+    <style>
+      /* 最先设置 html 背景色，在浏览器渲染第一帧前就生效，彻底杜绝白屏 */
+      html { background-color: #0f0f13; }
+    </style>
     <script>
       /* 在 Vue 挂载前同步读取用户主题偏好，避免挂载后切换导致颜色跳变 */
       (function() {
         const theme = localStorage.getItem('theme') || 'dark'
         document.documentElement.setAttribute('data-theme', theme)
+        if (theme === 'light') {
+          document.documentElement.style.backgroundColor = '#fafaf9'
+        }
       })()
     </script>
     <style>
       /* 初始加载动画 - 不依赖 JS，浏览器解析 HTML 立即显示 */
-      #app:has(> .app-loading) {
-        position: fixed;
-        inset: 0;
-        z-index: 99999;
-      }
-      .app-loading {
+      #app-loading {
         position: fixed;
         inset: 0;
         display: flex;
         align-items: center;
         justify-content: center;
-        background: #0f0f13;
         z-index: 99999;
-        transition: opacity 0.4s ease, visibility 0.4s ease;
+        transition: opacity 0.35s ease, visibility 0.35s ease;
       }
-      html[data-theme="light"] .app-loading {
-        background: #fafaf9;
+      #app-loading.fade-out {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
       }
       .app-loading__dots {
         display: flex;
@@ -53,17 +56,15 @@
         0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
         40% { transform: scale(1); opacity: 1; }
       }
-      /* Vue 挂载后 .app-loading 被移除，自然消失 */
     </style>
   </head>
   <body>
-    <div id="app">
-      <div class="app-loading">
-        <div class="app-loading__dots">
-          <div class="app-loading__dot"></div>
-          <div class="app-loading__dot"></div>
-          <div class="app-loading__dot"></div>
-        </div>
+    <div id="app"></div>
+    <div id="app-loading">
+      <div class="app-loading__dots">
+        <div class="app-loading__dot"></div>
+        <div class="app-loading__dot"></div>
+        <div class="app-loading__dot"></div>
       </div>
     </div>
     <script type="module" src="/src/main.ts"></script>

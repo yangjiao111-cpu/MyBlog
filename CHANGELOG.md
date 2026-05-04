@@ -216,18 +216,19 @@
 - **ArticleCard.vue**：首页文章卡片点击
 - **ArticlesView.vue**：文章列表页文章点击
 
-### SPA 白屏加载动画 + 主题同步修复
+### SPA 白屏加载动画 + 主题同步修复（迭代）
 
 - **问题 1**：新标签页打开 SPA 时，空 `div#app` 导致白屏闪烁
-- **方案 1**：`index.html` 的 `#app` 内添加纯 CSS/HTML 全屏 loading 动画
-  - 不依赖 JS，浏览器解析 HTML 瞬间即显示
-  - 3 个跳动圆点 + 主题色背景
+- **方案 1**：`index.html` 添加全局 loading 动画，Vue 挂载前显示，第一帧渲染后淡出
+  - loading 元素 `#app-loading` 移到 `#app` 外部，避免 Vue `mount()` 替换时产生空白间隙
+  - `main.ts` 中 `nextTick + requestAnimationFrame × 2` 确保 Vue 第一帧渲染完成后再淡出移除
 
 - **问题 2**：`index.html` hardcode `data-theme="dark"`，但用户可能设置了 light 主题
-  - Vue 挂载后 `useTheme` 的 `watchEffect` 立即切到 light，产生深色 → 浅色的颜色跳变（闪一下）
-- **方案 2**：`index.html` 的 `<head>` 中加内联 `<script>`，在 Vue 挂载前同步读取 localStorage 设置正确的 `data-theme`
-  - loading 动画样式同时适配 dark/light 主题
-  - Vue 挂载后主题一致，不再触发切换，彻底消除闪烁
+  - Vue 挂载后 `useTheme` 的 `watchEffect` 立即切到 light，产生深色 → 浅色的颜色跳变
+- **方案 2**：`<head>` 最优先位置添加 `<style>html{background-color:#0f0f13}</style>`
+  - 在浏览器渲染第一帧前即生效，覆盖浏览器默认白色背景
+  - 内联 `<script>` 紧跟其后，若主题为 light 则覆盖为 `#fafaf9`
+  - loading 动画圆点颜色同时适配 dark/light 主题
 
 ### 深色模式波浪颜色层次优化
 
