@@ -4,9 +4,7 @@ export interface Article {
   tag: string
   date: string
   readTime: string
-  cover: string
   emoji: string
-  coverImg?: string
   excerpt: string
   content: string
 }

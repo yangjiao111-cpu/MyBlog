@@ -17,7 +17,6 @@ const fallbackArticle: Article = {
   tag: '前端技术',
   date: '2026-05-04',
   readTime: '10 分钟',
-  cover: 'cover-fallback',
   emoji: '🚀',
   excerpt: '深入理解 Vue 3 Composition API 的设计思想与使用技巧，从 setup 到 composables，带你掌握现代 Vue 开发方式。',
   content: `

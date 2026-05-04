@@ -11,7 +11,7 @@ useScrollAnimation()
 <template>
   <main>
     <HeroSection />
-    <ArticleGrid :articles="articles" />
+    <ArticleGrid :articles="articles.slice(0, 3)" />
     <AboutSection />
   </main>
 </template>

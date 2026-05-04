@@ -18,6 +18,7 @@ function handleClick() {
 <template>
   <article
     class="article-item anim"
+    :class="{ 'article-item--first': index === 0 }"
     :style="{ transitionDelay: `${index * 0.06}s` }"
     @click="handleClick"
   >
@@ -31,9 +32,6 @@ function handleClick() {
           <span>{{ article.readTime }}</span>
           <span class="article-item__tag">{{ article.tag }}</span>
         </div>
-      </div>
-      <div v-if="article.coverImg" class="article-item__thumb">
-        <img :src="article.coverImg" :alt="article.title" class="article-item__thumb-img" />
       </div>
     </div>
   </article>
@@ -84,7 +82,7 @@ function handleClick() {
   color: var(--text-secondary);
   line-height: 1.6;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -113,33 +111,22 @@ function handleClick() {
   font-weight: 600;
 }
 
-.article-item__thumb {
-  width: auto;
-  height: 120px;
-  aspect-ratio: 1.75 / 1;
-  flex-shrink: 0;
-  overflow: hidden;
+/* 首条文章突出显示 */
+.article-item--first {
+  background: var(--bg-secondary);
   border-radius: 12px;
+  padding: 28px 20px 16px;
+  border-bottom: none;
+  border-left: 3px solid var(--accent);
+  box-shadow: var(--card-shadow);
 }
 
-.article-item__thumb-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  display: block;
+.article-item--first .article-item__title {
+  font-size: 1.25rem;
+  margin-top: 20px;
 }
 
-@media (max-width: 640px) {
-  .article-item__inner {
-    flex-direction: column;
-  }
-
-  .article-item__thumb {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 1.75 / 1;
-    order: -1;
-  }
+.article-item--first .article-item__excerpt {
+  -webkit-line-clamp: 1;
 }
 </style>

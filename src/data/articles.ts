@@ -1,5 +1,4 @@
 import type { Article } from '@/types'
-import coverPic from '@/assets/封面图测试.jpg'
 
 export const articles: Article[] = [
   {
@@ -8,7 +7,6 @@ export const articles: Article[] = [
     tag: '前端技术',
     date: '2026-04-28',
     readTime: '8 分钟',
-    cover: 'cover-1',
     emoji: '🎨',
     excerpt:
       '容器查询让组件可以根据自身容器的尺寸来调整样式，彻底改变了传统媒体查询的响应式设计方式...',
@@ -47,7 +45,6 @@ export const articles: Article[] = [
     tag: '3D 开发',
     date: '2026-04-20',
     readTime: '12 分钟',
-    cover: 'cover-2',
     emoji: '🌐',
     excerpt:
       '从场景搭建到光照设置，从模型加载到交互控制，手把手教你用 Three.js 创建令人惊叹的 3D 网页效果...',
@@ -76,9 +73,7 @@ document.body.appendChild(renderer.domElement);</code></pre>
     tag: 'AI 探索',
     date: '2026-04-15',
     readTime: '10 分钟',
-    cover: 'cover-3',
     emoji: '🤖',
-    coverImg: coverPic,
     excerpt:
       'AI 编程助手已经从简单的代码补全进化到能够理解项目上下文、生成完整功能模块的智能伙伴...',
     content: `
@@ -107,7 +102,6 @@ document.body.appendChild(renderer.domElement);</code></pre>
     tag: '前端技术',
     date: '2026-04-08',
     readTime: '15 分钟',
-    cover: 'cover-4',
     emoji: '✨',
     excerpt:
       '深入理解 CSS 动画的底层原理，掌握 keyframes、transition、scroll-driven 等动画技术...',
@@ -141,7 +135,6 @@ document.body.appendChild(renderer.domElement);</code></pre>
     tag: '效率工具',
     date: '2026-04-01',
     readTime: '9 分钟',
-    cover: 'cover-5',
     emoji: '📝',
     excerpt:
       '介绍如何用 Obsidian + Git 搭建一套属于自己的知识管理体系，实现知识的沉淀、关联与检索...',
@@ -171,7 +164,6 @@ document.body.appendChild(renderer.domElement);</code></pre>
     tag: '全栈开发',
     date: '2026-03-25',
     readTime: '14 分钟',
-    cover: 'cover-6',
     emoji: '⚡',
     excerpt:
       '深入分析 Next.js 的 SSR、SSG、ISR 等渲染策略，结合实际项目场景选择最优方案...',

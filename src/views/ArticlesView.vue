@@ -86,9 +86,6 @@ onUnmounted(() => {
                 <span class="article-item__tag">{{ article.tag }}</span>
               </div>
             </div>
-            <div v-if="article.coverImg" class="article-item__thumb">
-              <img :src="article.coverImg" :alt="article.title" class="article-item__thumb-img" />
-            </div>
           </div>
         </article>
       </div>
@@ -221,23 +218,6 @@ onUnmounted(() => {
   font-weight: 600;
 }
 
-.article-item__thumb {
-  width: auto;
-  height: 120px;
-  aspect-ratio: 1.75 / 1;
-  flex-shrink: 0;
-  overflow: hidden;
-  border-radius: 12px;
-}
-
-.article-item__thumb-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  display: block;
-}
-
 /* 加载动画 */
 .articles-page__loading {
   display: flex;
@@ -286,13 +266,6 @@ onUnmounted(() => {
 @media (max-width: 640px) {
   .article-item__inner {
     flex-direction: column;
-  }
-
-  .article-item__thumb {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 1.75 / 1;
-    order: -1;
   }
 }
 </style>
