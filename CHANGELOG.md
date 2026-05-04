@@ -123,3 +123,26 @@
 - **Commit**: `0613102`
 - **Message**: `feat: 文章链接改为新标签页打开`
 - **内容**: NavBar 文章链接改为 `target=_blank` 新标签页打开首页；ArticleCard 点击文章在新标签页打开详情页（`?id=xxx`）
+
+### 独立文章列表页 & 文章详情页
+
+- **ArticlesView.vue**：新增独立文章列表页（路由 `/articles`）
+  - 无限滚动加载，每次 10 篇，下滑自动触发
+  - 到底显示"已经到底了"提示，加载中显示脉冲动画
+  - 点击文章新标签页打开详情
+- **ArticleDetailView.vue**：新增独立文章详情页（路由 `/article/:id`）
+  - 去掉顶部 Hero 区域，更简洁的阅读体验
+  - 返回按钮：新窗口关闭 / 路由回退自适应
+  - 硬编码 fallbackArticle 备用数据 + try-catch 兜底
+- **NavBar.vue**：文章链接改用 `window.open()` 新窗口打开
+- **ArticleCard.vue**：点击改用 `window.open()` 新标签页打开详情
+- **router/index.ts**：新增 `/articles` 和 `/article/:id` 两条独立路由
+
+### Bug 修复：`.anim` 元素时序竞态导致页面空白
+- **问题**：全局 `.anim` 类初始 `opacity: 0`，需 IntersectionObserver 加 `.visible` 才显示。但文章数据异步加载（setTimeout/nextTick），Observer 初始化时 DOM 中尚无 `.anim` 元素，导致元素渲染后永远透明
+- **方案**：在数据赋值后使用 `nextTick()` 等 DOM 更新完毕，手动给新生成的 `.anim` 元素添加 `.visible` 类
+
+### Git 提交记录
+- **Commit**: `3bd9d2f`
+- **Message**: `feat: 新增独立文章列表页和文章详情页`
+- **文件变更**: 8 个文件变更，595 行新增，62 行删除
