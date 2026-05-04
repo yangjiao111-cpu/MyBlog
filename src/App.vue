@@ -1,15 +1,17 @@
 <script setup lang="ts">
+import { useRoute } from 'vue-router'
 import NavBar from '@/components/layout/NavBar.vue'
 import AppFooter from '@/components/layout/AppFooter.vue'
 import BackToTop from '@/components/common/BackToTop.vue'
 import ThemeToggle from '@/components/common/ThemeToggle.vue'
 import { useBackToTop } from '@/composables'
 
+const route = useRoute()
 const { isVisible, scrollToTop } = useBackToTop()
 </script>
 
 <template>
-  <NavBar>
+  <NavBar :transparent="route.path === '/articles'">
     <template #theme-toggle>
       <ThemeToggle />
     </template>

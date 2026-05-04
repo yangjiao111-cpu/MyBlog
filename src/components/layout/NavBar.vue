@@ -2,6 +2,14 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 
+interface Props {
+  transparent?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  transparent: false,
+})
+
 const router = useRouter()
 const isScrolled = ref(false)
 const isMenuOpen = ref(false)
@@ -40,7 +48,13 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <nav class="navbar" :class="{ 'navbar--scrolled': isScrolled }">
+  <nav
+    class="navbar"
+    :class="{
+      'navbar--scrolled': isScrolled,
+      'navbar--transparent': props.transparent,
+    }"
+  >
     <div class="navbar__inner">
       <router-link to="/" class="navbar__logo">
         <svg class="navbar__star" width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -81,14 +95,45 @@ onUnmounted(() => {
     background 0.3s ease,
     box-shadow 0.3s ease,
     height 0.3s ease;
-  background: transparent;
+  background: var(--nav-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .navbar--scrolled {
-  background: var(--nav-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   box-shadow: 0 1px 0 var(--border), 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+.navbar--transparent:not(.navbar--scrolled) {
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.navbar--transparent:not(.navbar--scrolled) .navbar__logo {
+  color: #fff;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+.navbar--transparent:not(.navbar--scrolled) .navbar__star {
+  color: #fff;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4));
+}
+
+.navbar--transparent:not(.navbar--scrolled) .navbar__links a {
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+.navbar--transparent:not(.navbar--scrolled) .navbar__links a:hover {
+  color: #fff;
+}
+
+.navbar--transparent:not(.navbar--scrolled) .navbar__hamburger span {
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 }
 
 .navbar__inner {
@@ -118,27 +163,13 @@ onUnmounted(() => {
   color: inherit;
 }
 
-.navbar:not(.navbar--scrolled) .navbar__logo {
-  color: #fff;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
-}
-
-.navbar--scrolled .navbar__logo {
+.navbar__logo {
   opacity: 1;
 }
 
 .navbar__star {
   display: block;
   color: var(--accent);
-}
-
-.navbar:not(.navbar--scrolled) .navbar__star {
-  color: #fff;
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4));
-}
-
-.navbar--scrolled .navbar__home-icon {
-  opacity: 0.85;
 }
 
 .navbar__links {
@@ -154,15 +185,6 @@ onUnmounted(() => {
   transition: color 0.2s;
   position: relative;
   text-decoration: none;
-}
-
-.navbar:not(.navbar--scrolled) .navbar__links a {
-  color: rgba(255, 255, 255, 0.9);
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
-}
-
-.navbar:not(.navbar--scrolled) .navbar__links a:hover {
-  color: #fff;
 }
 
 .navbar__links a::after {
@@ -204,11 +226,6 @@ onUnmounted(() => {
   transition: all 0.3s;
 }
 
-.navbar:not(.navbar--scrolled) .navbar__hamburger span {
-  background: #fff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-}
-
 @media (max-width: 768px) {
   .navbar__hamburger {
     display: flex;
@@ -233,8 +250,13 @@ onUnmounted(() => {
   }
 
   .navbar__links--open a {
-    color: var(--text-secondary) !important;
-    text-shadow: none !important;
+    color: var(--text-secondary);
+    text-shadow: none;
+  }
+
+  .navbar--transparent:not(.navbar--scrolled) .navbar__links--open a {
+    color: var(--text-secondary);
+    text-shadow: none;
   }
 
   .navbar--scrolled .navbar__links--open {

@@ -172,7 +172,7 @@ onUnmounted(() => {
   /* 用 aspect-ratio 保持图片比例，避免固定高度导致拉伸模糊 */
   aspect-ratio: 21 / 9;
   min-height: 320px;
-  max-height: 520px;
+  max-height: 580px;
   overflow: hidden;
 }
 
