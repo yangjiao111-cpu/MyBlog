@@ -276,3 +276,10 @@
 ### Git 提交记录
 - **Commit**: `8fff3de`
 - **Message**: `feat: 回到顶部滚动即显示 + 移动端菜单改用 vaul-vue 抽屉 + 修复跨标签页主题闪烁`
+
+### Git 提交记录
+- **Commit**: `10b1789`
+- **Message**: `feat: 替换网站图标为四角闪光星，更新个人简介时间线`
+- **内容**:
+  - favicon.svg 从紫色闪电图标替换为与导航栏同款的四角闪光星（accent 色 #f59e42）
+  - AboutSection.vue 更新个人经历时间线信息（职位、年份）
