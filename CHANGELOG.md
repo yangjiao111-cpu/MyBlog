@@ -253,3 +253,26 @@
 ### Git 提交记录
 - **Commit**: `a72055e`
 - **Message**: `fix: 修复跨标签页主题闪烁 + 添加 storage 事件监听多标签页同步`
+- **Commit**: `c88bd34`
+- **Message**: `docs: 更新 CHANGELOG - 跨标签页主题同步修复`
+
+### 跨标签页主题闪烁根因修复（第二轮）
+
+- **根因**：`document.startViewTransition(callback)` 的 callback 是异步执行的（渲染管线下一步才运行），在此期间 `localStorage` 仍为旧值，用户在此期间 `window.open` 新标签页会读到旧主题
+- **修复**：将 `localStorage.setItem('theme', nextTheme)` 提前到 `startViewTransition()` 之前同步执行，确保任何时刻开新标签页都能读到最新主题
+
+### 回到顶部按钮优化
+
+- `useBackToTop.ts`：`scrollY > 600` 改为 `scrollY > 0`，页面只要不在顶部就显示按钮
+
+### 移动端菜单改为 vaul-vue 抽屉
+
+- **引入依赖**：`vaul-vue`（基于 Reka UI 的无样式抽屉组件）
+- **NavBar.vue**：移动端汉堡菜单改为 `DrawerRoot direction="top"` 从顶部滑入
+  - 自带遮罩层（`DrawerOverlay`）+ 背景滚动锁定 + ESC 关闭 + 拖拽关闭
+  - 去掉手写的 `Transition`、`handleClickOutside`、`watch(isMenuOpen)` 等代码
+  - 菜单内容居中显示，适配现有主题变量
+
+### Git 提交记录
+- **Commit**: `8fff3de`
+- **Message**: `feat: 回到顶部滚动即显示 + 移动端菜单改用 vaul-vue 抽屉 + 修复跨标签页主题闪烁`
