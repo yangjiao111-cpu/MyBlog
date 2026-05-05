@@ -51,6 +51,13 @@ export function useTheme() {
    * - 不支持的浏览器：降级为直接切换（配合 CSS 全局渐变过渡）
    */
   function toggleThemeWithTransition(event: MouseEvent) {
+    const nextTheme = theme.value === 'dark' ? 'light' : 'dark'
+
+    // 关键：在 VT 动画开始前就立即写入 localStorage
+    // startViewTransition 的 callback 是异步执行的（渲染管线下一步才运行），
+    // 如果用户在动画期间 window.open 新标签页，callback 还没执行，localStorage 还是旧值
+    localStorage.setItem('theme', nextTheme)
+
     if (!(document as any).startViewTransition) {
       toggleTheme()
       return
@@ -65,14 +72,12 @@ export function useTheme() {
       Math.max(y, window.innerHeight - y)
     )
 
-    const nextTheme = theme.value === 'dark' ? 'light' : 'dark'
-
     // 标记 VT 进行中
     isVTActive = true
 
     const transition = document.startViewTransition(() => {
-      // 回调内只做纯 DOM 操作，完全绕开 Vue 响应式系统
-      applyThemeToDOM(nextTheme)
+      // 回调内只做纯 DOM 操作，localStorage 已在 VT 前写入
+      document.documentElement.setAttribute('data-theme', nextTheme)
     })
 
     transition.ready.then(() => {

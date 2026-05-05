@@ -4,7 +4,7 @@ export function useBackToTop() {
   const isVisible = ref(false)
 
   function handleScroll() {
-    isVisible.value = window.scrollY > 600
+    isVisible.value = window.scrollY > 0
   }
 
   function scrollToTop() {

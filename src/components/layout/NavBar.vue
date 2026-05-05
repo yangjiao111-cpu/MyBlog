@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
+import { DrawerRoot, DrawerContent, DrawerOverlay, DrawerTitle } from 'vaul-vue'
 
 interface Props {
   transparent?: boolean
@@ -25,23 +26,13 @@ function openArticles() {
   window.open('/articles', '_blank')
 }
 
-function handleClickOutside(event: MouseEvent) {
-  const target = event.target as HTMLElement
-  const nav = document.querySelector('.navbar__inner')
-  if (nav && !nav.contains(target)) {
-    isMenuOpen.value = false
-  }
-}
-
 onMounted(() => {
   onScroll()
   window.addEventListener('scroll', onScroll, { passive: true })
-  document.addEventListener('click', handleClickOutside)
 })
 
 onUnmounted(() => {
   window.removeEventListener('scroll', onScroll)
-  document.removeEventListener('click', handleClickOutside)
 })
 </script>
 
@@ -64,7 +55,7 @@ onUnmounted(() => {
         星源
       </router-link>
 
-      <ul class="navbar__links" :class="{ 'navbar__links--open': isMenuOpen }">
+      <ul class="navbar__links">
         <li>
           <a href="javascript:void(0)" @click="openArticles">文章</a>
         </li>
@@ -74,11 +65,34 @@ onUnmounted(() => {
       </ul>
 
       <button class="navbar__hamburger" @click.stop="toggleMenu">
-        <span></span>
-        <span></span>
-        <span></span>
+        <span :class="{ 'navbar__hamburger--open': isMenuOpen }"></span>
+        <span :class="{ 'navbar__hamburger--open': isMenuOpen }"></span>
+        <span :class="{ 'navbar__hamburger--open': isMenuOpen }"></span>
       </button>
     </div>
+
+    <!-- vaul-vue 顶部抽屉 -->
+    <DrawerRoot
+      v-model:open="isMenuOpen"
+      direction="top"
+      :dismissible="true"
+      :modal="true"
+      :should-scale-background="false"
+      :handle-only="true"
+    >
+      <DrawerOverlay class="navbar__drawer-overlay" />
+      <DrawerContent class="navbar__drawer-content">
+        <DrawerTitle class="sr-only">导航菜单</DrawerTitle>
+        <ul class="navbar__drawer-links">
+          <li>
+            <a href="javascript:void(0)" @click="openArticles">文章</a>
+          </li>
+          <li>
+            <slot name="theme-toggle" />
+          </li>
+        </ul>
+      </DrawerContent>
+    </DrawerRoot>
   </nav>
 </template>
 
@@ -233,32 +247,81 @@ onUnmounted(() => {
     display: none;
   }
 
-  .navbar__links--open {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    top: 64px;
+  /* 汉堡图标动画：三条线变 X */
+  .navbar__hamburger--open:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+  }
+  .navbar__hamburger--open:nth-child(2) {
+    opacity: 0;
+  }
+  .navbar__hamburger--open:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -5px);
+  }
+
+  /* vaul-vue 遮罩层样式 */
+  .navbar__drawer-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    z-index: 99;
+  }
+
+  /* vaul-vue 抽屉内容样式 */
+  .navbar__drawer-content {
+    position: fixed;
+    top: 0;
     left: 0;
     right: 0;
-    background: var(--nav-bg);
-    backdrop-filter: blur(20px);
-    padding: 16px 24px;
-    gap: 16px;
-    border-bottom: 1px solid var(--border);
+    z-index: 101;
+    background: var(--surface);
+    border-radius: 0 0 16px 16px;
+    padding: 8px 0 24px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    outline: none;
   }
 
-  .navbar__links--open a {
-    color: var(--text-secondary);
-    text-shadow: none;
+  .navbar__drawer-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px 16px;
   }
 
-  .navbar--transparent:not(.navbar--scrolled) .navbar__links--open a {
-    color: var(--text-secondary);
-    text-shadow: none;
+  .navbar__drawer-links a {
+    display: block;
+    padding: 12px 16px;
+    font-size: 0.95rem;
+    color: var(--text);
+    text-decoration: none;
+    border-radius: 10px;
+    transition: background 0.2s;
+    text-align: center;
   }
 
-  .navbar--scrolled .navbar__links--open {
-    top: 56px;
+  .navbar__drawer-links a:hover {
+    background: var(--surface-hover);
+  }
+
+  .navbar__drawer-links li:has(.theme-toggle) {
+    padding: 8px 16px;
+    display: flex;
+    justify-content: center;
+  }
+
+  /* 无障碍隐藏标题 */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
 }
 </style>
